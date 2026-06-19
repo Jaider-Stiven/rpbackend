@@ -34,11 +34,6 @@ proyectofoodend/
 │   │   ├── auth.routes.js        # Rutas de autenticación (/api/register, /api/login)
 │   │   └── index.js              # Enrutador principal de la app
 │   └── server.js                 # Inicialización de Express, CORS y Middlewares
-├── public/
-│   ├── assets/
-│   │   └── foodexpress_bg.png    # Fondo premium de FoodExpress
-│   ├── index.html                # Interfaz de pruebas interactiva
-│   └── style.css                 # Estilos de la interfaz de pruebas
 ├── .gitignore                    # Reglas de exclusión de Git
 ├── index.js                      # Punto de entrada (Listen en puerto)
 ├── package.json                  # Dependencias del proyecto
@@ -71,12 +66,13 @@ El servidor imprimirá en consola:
 
 ---
 
-## 🖥️ Interfaz Web de Pruebas
+## 🖥️ Interfaz Web de Pruebas (Frontend Separado)
 
-Para probar de forma visual el inicio de sesión y registro de **FoodExpress**:
-1. Inicia el servidor con `npm run dev`.
-2. Abre tu navegador web e ingresa a: **`http://localhost:3000`**
-3. Podrás registrar nuevos usuarios y loguearte. Los usuarios creados se registrarán automáticamente en el archivo `app/config/db/usuarios.json`.
+El frontend de pruebas interactivo está alojado en una carpeta separada llamada `proyectofoodfront` con su propio repositorio de Git. Para probar la autenticación de **FoodExpress**:
+1. Asegúrate de tener el servidor backend corriendo con `npm run dev` en el puerto 3000.
+2. Abre la carpeta `proyectofoodfront`.
+3. Abre el archivo `index.html` en tu navegador web preferido (haciendo doble clic en él o sirviéndolo localmente).
+4. Podrás interactuar con los formularios de registro y login de forma fluida. Los datos se enviarán a la API local (`http://localhost:3000`) y se almacenarán en `proyectofoodend/app/config/db/usuarios.json`.
 
 ---
 
@@ -170,8 +166,8 @@ El proyecto se ha desarrollado siguiendo prácticas profesionales de control de 
    git add app/controllers/ app/config/db/
    git commit -m "feat: implement auth controllers and database config"
    ```
-6. **Commit del Frontend de Pruebas Dinámico:**
+6. **Limpieza del Backend y Desacoplamiento del Frontend:**
    ```bash
-   git add public/
-   git commit -m "feat: implement premium FoodExpress test UI frontend"
+   git add -A
+   git commit -m "cleanup: remove public frontend folder and static middleware"
    ```
