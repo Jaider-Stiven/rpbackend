@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodExpress - Portal de Autenticación</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome para Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Hojas de Estilos Personalizadas -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <!-- Tarjeta Principal de Autenticación -->
+        <div class="auth-card">
+            <!-- Encabezado con Logo Temático -->
+            <div class="card-header">
+                <div class="logo">
+                    <i class="fa-solid fa-fire-flame-curved logo-icon"></i>
+                    <h1>Food<span>Express</span></h1>
+                </div>
+                <p id="header-subtitle">¡Tu comida favorita a un clic!</p>
+            </div>
+
+            <!-- Selectores de Pestañas (Registro / Login) -->
+            <div class="tab-selector">
+                <button id="tab-login" class="tab-btn active" onclick="switchTab('login')">
+                    <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+                </button>
+                <button id="tab-register" class="tab-btn" onclick="switchTab('register')">
+                    <i class="fa-solid fa-user-plus"></i> Registrarse
+                </button>
+            </div>
+
+            <!-- Formulario de Iniciar Sesión (Login) -->
+            <form id="form-login" class="auth-form active-form" onsubmit="handleAuth(event, 'login')">
+                <div class="input-group">
+                    <label for="login-username">Usuario</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user input-icon"></i>
+                        <input type="text" id="login-username" placeholder="Ingresa tu usuario" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Contraseña</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="login-password" placeholder="Ingresa tu contraseña" required>
+                        <i class="fa-solid fa-eye-slash toggle-password" onclick="togglePasswordVisibility('login-password', this)"></i>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn" id="btn-login-submit">
+                    <span>Entrar a FoodExpress</span>
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+            </form>
+
+            <!-- Formulario de Registro (Register) -->
+            <form id="form-register" class="auth-form" onsubmit="handleAuth(event, 'register')">
+                <div class="input-group">
+                    <label for="register-username">Nuevo Usuario</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user input-icon"></i>
+                        <input type="text" id="register-username" placeholder="Crea tu usuario" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="register-password">Contraseña</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="register-password" placeholder="Mínimo 4 caracteres" required>
+                        <i class="fa-solid fa-eye-slash toggle-password" onclick="togglePasswordVisibility('register-password', this)"></i>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn" id="btn-register-submit">
+                    <span>Crear Cuenta</span>
+                    <i class="fa-solid fa-user-check"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contenedor de Alertas Dinámicas (Toast Messages) -->
+    <div id="toast-container"></div>
+
+    <script>
+        // Cambiar entre la pestaña de Login y Registro con animación
+        function switchTab(type) {
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+            const formLogin = document.getElementById('form-login');
+            const formRegister = document.getElementById('form-register');
+            const subtitle = document.getElementById('header-subtitle');
+
+            if (type === 'login') {
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+                formLogin.classList.add('active-form');
+                formRegister.classList.remove('active-form');
+                subtitle.innerText = "¡Tu comida favorita a un clic!";
+            } else {
+                tabRegister.classList.add('active');
+                tabLogin.classList.remove('active');
+                formRegister.classList.add('active-form');
+                formLogin.classList.remove('active-form');
+                subtitle.innerText = "Regístrate y empieza a pedir comida";
+            }
+        }
+
+        // Mostrar u ocultar la contraseña con el icono de ojo
+        function togglePasswordVisibility(inputId, iconElement) {
+            const passwordInput = document.getElementById(inputId);
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                iconElement.classList.replace("fa-eye-slash", "fa-eye");
+            } else {
+                passwordInput.type = "password";
+                iconElement.classList.replace("fa-eye", "fa-eye-slash");
+            }
+        }
+
+        // Mostrar Alertas Toast Modernas
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            // Elegir icono según el tipo
+            let icon = 'fa-circle-info';
+            if (type === 'success') icon = 'fa-circle-check';
+            if (type === 'error') icon = 'fa-circle-exclamation';
+
+            toast.innerHTML = `
+                <i class="fa-solid ${icon}"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            // Eliminar toast después de 4 segundos
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 500);
+            }, 3500);
+        }
+
+        // Gestionar la autenticación con la API REST de Express
+        async function handleAuth(event, type) {
+            event.preventDefault();
+
+            let url = '';
+            let bodyData = {};
+
+            if (type === 'login') {
+                const usuarioVal = document.getElementById('login-username').value;
+                const contrasenaVal = document.getElementById('login-password').value;
+                url = '/api/login';
+                bodyData = { usuario: usuarioVal, contraseña: contrasenaVal };
+            } else {
+                const usuarioVal = document.getElementById('register-username').value;
+                const contrasenaVal = document.getElementById('register-password').value;
+                url = '/api/register';
+                bodyData = { usuario: usuarioVal, contraseña: contrasenaVal };
+            }
+
+            try {
+                // Deshabilitar botón durante la carga
+                const submitBtn = event.target.querySelector('.submit-btn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Procesando...`;
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bodyData)
+                });
+
+                const data = await response.json();
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+
+                if (response.ok) {
+                    // Si todo es satisfactorio (código 200 o 201)
+                    showToast(data.mensaje || "Operación exitosa", "success");
+                    if (type === 'register') {
+                        // Limpiar formulario y cambiar a login para que inicie sesión
+                        document.getElementById('form-register').reset();
+                        setTimeout(() => switchTab('login'), 1000);
+                    } else {
+                        // Limpiar formulario de login
+                        document.getElementById('form-login').reset();
+                    }
+                } else {
+                    // Si hay un error (ej. error en la autenticación, 401, 400)
+                    showToast(data.error || "Error inesperado", "error");
+                }
+            } catch (err) {
+                showToast("No se pudo conectar con el servidor de FoodExpress", "error");
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>
