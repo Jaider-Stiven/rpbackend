@@ -163,3 +163,52 @@ export const eliminarUsuario = async (req, res) => {
         });
     }
 };
+
+// ==========================================
+// 6. PUT: REEMPLAZAR/ACTUALIZAR COMPLETAMENTE UN USUARIO EXISTENTE
+// ==========================================
+export const reemplazarUsuario = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const usuario = req.body.usuario || req.body.username;
+        const contrasena = req.body.contraseña || req.body.contrasena || req.body.password;
+
+        // PUT requiere que se envíen obligatoriamente ambos campos
+        if (!usuario || !contrasena) {
+            return res.status(400).json({
+                error: "El usuario y la contraseña son obligatorios para la actualización completa (PUT)."
+            });
+        }
+
+        // Verificar si el usuario existe
+        const [rows] = await pool.query("SELECT * FROM usuarios WHERE id = ?", [id]);
+        if (rows.length === 0) {
+            return res.status(404).json({
+                error: "Usuario no encontrado"
+            });
+        }
+
+        // Verificar si el nuevo nombre de usuario ya está tomado por otro usuario
+        const [duplicado] = await pool.query("SELECT * FROM usuarios WHERE usuario = ? AND id != ?", [usuario.trim(), id]);
+        if (duplicado.length > 0) {
+            return res.status(400).json({
+                error: "El nombre de usuario ya está en uso."
+            });
+        }
+
+        // Actualizar ambos campos completamente
+        await pool.query(
+            "UPDATE usuarios SET usuario = ?, contraseña = ? WHERE id = ?",
+            [usuario.trim(), contrasena, id]
+        );
+
+        return res.status(200).json({
+            mensaje: "Usuario reemplazado completamente con éxito"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            error: "Error al reemplazar el usuario: " + error.message
+        });
+    }
+};
+

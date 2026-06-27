@@ -4,6 +4,7 @@ import {
     obtenerUsuarioPorId,
     crearUsuario,
     actualizarUsuario,
+    reemplazarUsuario,
     eliminarUsuario
 } from "../controllers/usuarios.controllers.js";
 
@@ -14,6 +15,7 @@ route.get("/", obtenerUsuarios);
 route.get("/:id", obtenerUsuarioPorId);
 route.post("/", crearUsuario);
 route.patch("/:id", actualizarUsuario);
+route.put("/:id", reemplazarUsuario);
 route.delete("/:id", eliminarUsuario);
 
 export default route;
