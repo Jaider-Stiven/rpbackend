@@ -37,7 +37,7 @@ export const registrarUsuario = async (req, res) => {
         // 3. Registrar el nuevo usuario en MySQL
         // Nota: La columna en tu phpMyAdmin se llama 'contraseña' (con ñ)
         const [result] = await pool.query(
-            "INSERT INTO usuarios (usuario, contrasea) VALUES (?, ?)",
+            "INSERT INTO usuarios (usuario, contraseña) VALUES (?, ?)",
             [usuario.trim(), contrasena]
         );
 
@@ -78,7 +78,7 @@ export const loginUsuario = async (req, res) => {
         // 2. Buscar al usuario y verificar credenciales directamente en MySQL
         // Hacemos un SELECT comparando el usuario y la contraseña
         const [rows] = await pool.query(
-            "SELECT * FROM usuarios WHERE usuario = ? AND contrasea = ?",
+            "SELECT * FROM usuarios WHERE usuario = ? AND contraseña = ?",
             [usuario.trim(), contrasena]
         );
 
