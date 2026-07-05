@@ -60,7 +60,7 @@ export const crearUsuario = async (req, res) => {
 
         // Insertar usuario
         const [result] = await pool.query(
-            "INSERT INTO usuarios (usuario, contrasea) VALUES (?, ?)",
+            "INSERT INTO usuarios (usuario, contraseña) VALUES (?, ?)",
             [usuario.trim(), contrasena]
         );
 
@@ -116,7 +116,7 @@ export const actualizarUsuario = async (req, res) => {
         }
 
         if (contrasena) {
-            fieldsToUpdate.push("contrasea = ?");
+            fieldsToUpdate.push("contraseña = ?");
             values.push(contrasena);
         }
 
@@ -198,7 +198,7 @@ export const reemplazarUsuario = async (req, res) => {
 
         // Actualizar ambos campos completamente
         await pool.query(
-            "UPDATE usuarios SET usuario = ?, contrasea = ? WHERE id = ?",
+            "UPDATE usuarios SET usuario = ?, contraseña = ? WHERE id = ?",
             [usuario.trim(), contrasena, id]
         );
 
