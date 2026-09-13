@@ -1,4 +1,6 @@
+import jwt from "jsonwebtoken";
 import { pool } from "../config/db/basedatos.js";
+import config from "../config/enviroments/index.js";
 
 // ==========================================
 // CONTROLADOR: REGISTRO DE USUARIOS (MYSQL)
@@ -90,11 +92,19 @@ export const loginUsuario = async (req, res) => {
             });
         }
 
-        // 4. Si coincide, la autenticación es correcta
-        // Requisito del caso: "si la autenticación es correcta saldrá un mensaje de autenticación satisfactoria"
+        // 4. Si coincide, generar el token JWT
+        const usuarioData = rows[0];
+        const token = jwt.sign(
+            { id: usuarioData.id, usuario: usuarioData.usuario },
+            config.jwt.secret,
+            { expiresIn: config.jwt.expiresIn }
+        );
+
+        // 5. Retornar mensaje de éxito y el token de autenticación
         return res.status(200).json({
             mensaje: "autenticación satisfactoria",
-            usuario: rows[0].usuario
+            usuario: usuarioData.usuario,
+            token: token
         });
 
     } catch (error) {

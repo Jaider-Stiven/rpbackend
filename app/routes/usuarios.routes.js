@@ -7,8 +7,12 @@ import {
     reemplazarUsuario,
     eliminarUsuario
 } from "../controllers/usuarios.controllers.js";
+import { verificarToken } from "../middlewares/auth.middleware.js";
 
 const route = Router();
+
+// Proteger todas las rutas de /api/usuarios con el middleware de autenticación por Token
+route.use(verificarToken);
 
 // Definir las rutas CRUD para /api/usuarios
 route.get("/", obtenerUsuarios);

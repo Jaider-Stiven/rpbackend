@@ -22,7 +22,11 @@ const config = {
         password: process.env.DB_PASSWORD || "",
         host: process.env.DB_HOST || "localhost",
         port: process.env.DB_PORT || 3306,
-        database: process.env.DB_NAME || "foodexpress"
+        database: process.env.DB_NAME || "foodexpressdb"
+    },
+    jwt: {
+        secret: process.env.JWT_SECRET || "secreto_super_seguro_foodexpress",
+        expiresIn: process.env.JWT_EXPIRES_IN || "2h"
     }
 };
 
